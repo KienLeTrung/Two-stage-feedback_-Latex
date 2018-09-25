@@ -140,8 +140,8 @@ P = P_{c}P_{d1} + (1-P_{c})P_{DTX}P_{c}P_{d1} + P_{c}(1-P_{d1})P_{N}P_{c}P_{d2}\
     \item $P_{c}$: the successful probability of PDCCH
     \item $P_{d1}$: the successful probability of a single PDSCH
     \item $P_{d2}$: the successful probability of a retransmitted PDSCH
-    \item $P_{DTX}$: the successful probability of DTX or NAK detection if no ACK/NACK is sent by the UE
-    \item $P_{N}$: the successful probability of DTX or NAK detection if NACK is sent by the UE
+    \item $P_{DTX}$: the successful probability of DTX or NAK detection if no ACK/NAK is sent by the UE
+    \item $P_{N}$: the successful probability of DTX or NAK detection if NAK is sent by the UE
 \end{itemize}
 
 From \eqref{eq3}, the reliability of URLLC can be achieved with $P_{c}$, $P_{d1}$, $P_{d2}$, $P_{DTX}$ and $P_{N}$ being around 0.999. The requirements for control and data channel design are relaxed dramatically in comparison to a one-shot transmission. However, these values are still higher than the LTE probability of 0.99 so the goal is to generate more retransmission opportunities in the time constraint  so  that  the  URLLC  reliability  target  can be attained. This work focuses on the increases of $P_{c}$, $P_{d1}$ and $P_{d2}$ while $P_{DTX}$ and $P_{N}$ are assumed to be the same as LTE.
@@ -165,7 +165,7 @@ In these terms, $T_{FB}$ can be reduced to lower HARQ latency. The other terms a
 As can be seen in Fig.~\ref{fig1}, $T_{FB}$ has a heavy contribution to latency from the transmission time during which the transmitter is transmitting the packet to the processing time at the receiver during which the receiver is doing the receive processing. The receive processing includes but not limited to equalization, demodulation and channel decoding where channel decoding at the decoder is quite an onerous task. It impedes the opportunity of the useful retransmissions in the time constraint.
 
 \begin{figure}[htbp]
-\centerline{\includegraphics[scale=0.42]{fig1.png}}
+\centerline{\includegraphics[scale=0.4]{fig1.png}}
 \caption{Impact of $T_{FB}$ to HARQ RTT.}
 \label{fig1}
 \end{figure}
@@ -173,7 +173,7 @@ As can be seen in Fig.~\ref{fig1}, $T_{FB}$ has a heavy contribution to latency 
 In an effort to optimize the HARQ feedback timing and creating more (re-)transmission opportunities within a certain latency target, a two-stage feedback is proposed. The first stage of feedback is basically a prediction about the success/failure of the transport block on PDSCH. This early prediction-based feedback is designed so that it can be transmitted by the receiver very quickly, possibly even before the complete reception of the transport block of data. It informs the transmitter about the result of the channel decoder by an intelligent estimation without passing through the whole decoding process. The second stage of feedback is a conventional HARQ feedback.
 
 \begin{figure}[htbp]
-\centerline{\includegraphics[scale=0.45]{fig2.png}}
+\centerline{\includegraphics[scale=0.4]{fig2.png}}
 \caption{Time analysis of prediction-based feedback and regular HARQ feedback.}
 \label{fig2}
 \end{figure}
@@ -201,20 +201,12 @@ T' = r_{p}\times T_{TTI} + T_{predictor}\label{eq5}
 
 The decrease of latency in retransmission due to the number of OFDM symbols saved by early prediction-based feedback are calculated in the following analysis. PDSCH length is 4 OFDM symbols with SCS 60kHz in Fig.~\ref{fig2}. The maximum processing time of the decoder is 0.125ms that is equivalent to 7 OFDM symbols with SCS 60kHz (1 slot with SCS 60kHz has 14 OFDM symbols spread in 0.25ms). The predictor only uses half of the transmitted bits in order to estimate the error probability of the decoder so it only uses 2 symbols and time equivalent to 2 symbols is saved. Moreover, the predictor only deals with a small portion of bits and runs few iterations of message passing algorithm in comparison to a whole codeword and full iterations of the decoder. Thereby, the predictor takes less time to provide an estimation. If the iterations of the predictor are one fifth that of the decoder (applied in simulation presented in \ref{VV}), the processing time of the predictor is 0.025ms being approximate to 2 symbols. This means that 5 symbols are saved. In total, time corresponding to 7 symbols is saved in the retransmission process and this time margin gained  might be translated  to  one more  retransmission  possibility  in the time constraint. In addition, if the UE continues to fail to decode data several times, the accumulated saving time after each NAK feedback even leads to many retransmission opportunities.  Thereby,  the reliability  requirement  of  channel  design  can  be  relaxed to  reduce  resource  utilization. 
 \begin{figure}[htbp]
-\centerline{\includegraphics[scale=0.45]{fig3.png}}
+\centerline{\includegraphics[scale=0.38]{fig3.png}}
 \caption{Missing early feedback triggers an early transmission.}
 \label{fig3}
 \end{figure}
 
 Early prediction feedback has multiple uses to trigger an immediate retransmission when indicating the gNB about not only the potential PDSCH failure but also the PDCCH failure. As shown in Fig.~\ref{fig3}, the gNB transmits PDCCH and PDSCH in the downlink (C1 and D1) but the UE fails to decode PDCCH so it does not know the location of PDSCH. Thereby, in this case, as it does not even know if it has been scheduled, it will send neither early prediction-based feedback nor the second stage of the classical feedback. Because there is no prediction transmitted to the gNB, it detects this discontinuous signal. Subsequently, the gNB retransmits immediately PDCCH and PDSCH (C2 and D2) instead of waiting the UE\textquotesingle s HARQ feedback (F2). The prediction even can be transmitted before the end of the initial URLLC transmission so using this strategy helps the system save much time and generates more retransmission occasions. Thus, this early prediction-based feedback will make the transmission much more robust against the PDCCH errors as an absence of prediction feedback at the gNB will be a direct indication of missed PDCCH. 
-
-To further improve the reliability of the prediction in early
-feedback, the UE can exploit the parameters derived from the
-early decoded signal. For example, after successfully decoding
-the DCI on the PDCCH, the UE has the information on
-channel quality and the block error rate of a codeword given
-transmitting power and noise. It can use this information in
-supplementing the prediction of PDSCH decoding's outcome.
 
 \subsection{Prediction process}\label{BB}
 Early prediction-based feedback is generated by the following process. When the signal comes to the UE, after receiving a part of PDSCH codeword (a part of the TTI), the UE starts to predict the error probability of the decoding process. The rest of the codeword is still received by the UE in parallel to serve as the input of the decoder. Subsequently, the UE calculates the LLR for each bit in the predictor as: 
@@ -242,25 +234,16 @@ Using the base graph for LDPC code as defined in 3GPP standard, the UE knows the
 After calculating the error probabilities of decoded bits, the UE estimates block error rate (BLER) of the whole PDSCH codeword by:
 
 \begin{equation}
-    BLER_{estimate} = \frac{1}{M} \sum_{k} P_{e,k}
+   \mathrm{BLER}_{\mathrm{estimate}} = \frac{1}{M} \sum_{k} P_{e,k}
 \end{equation}
 
 \begin{itemize}
     \item M: the length of codeword used in the predictor
 \end{itemize}
 
-From $BLER_{estimate}$, the UE can predict the error probability of the decoder by setting a threshold (th) and generates early ACK/NAK as followed:
+From $\mathrm{BLER}_{\mathrm{estimate}}$, the UE can predict the error probability of the decoder by setting a threshold. An early ACK is generated if $\mathrm{BLER}_{\mathrm{estimate}}$ is smaller than the chosen threshold. Otherwise, an early NAK is generated. 
 
-\begin{equation}
-\begin{split}  
-    FB_{early} & = ACK \hspace{0.5cm} if BLER_{estimate} < th\\
-               & = NAK  \hspace{0.5cm} if BLER_{estimate} > th \label{eq9}
-\end{split}
-\end{equation}
-
-The prediction allows the receiver to transmit a very fast response to the transmitter regarding the success/failure of the transport block, even before receiving the full data of the transport block. This helps the gNB have more chances to retransmit the packet to boost the reliability. However, the predictor also makes the system suffer from false prediction. There are two kinds of false prediction: false negative (FN) and false positive (FP). False negative occurs when an early NAK is sent while the decoder decodes correctly the codeword. It causes a waste of resources due to the unnecessary retransmissions but it does not affect the reliability directly. False positive occurs when an early prediction ACK is sent but, in fact, the decoder fails to decode data. This means that there is no retransmission and the packet is lost. It affects the performance of URLLC transmission. Therefore, false positive is more severe than false negative. The probabilities of false negative and false positive can be adapted by changing the proper threshold in predicting ACK or NAK. The ratio between false positive and false negative is changed depending on the requirements at system level.  If there is an abundance of resource as well as energy and reliability is prioritized, the system is able to accept
-the unnecessary retransmissions due to false negative so the threshold is adapted to make false negative happen more but false positive happen less and vice versa when the threshold is
-adapted to make false negative happen less but false positive happen more if resource needs to be shared among many UEs with strict latency and reliability requirements.
+The prediction allows the receiver to transmit a very fast response to the transmitter regarding the success/failure of the transport block, even before receiving the full data of the transport block. This helps the gNB have more chances to retransmit the packet to boost the reliability. However, the predictor also makes the system suffer from false prediction. There are two kinds of false prediction: false negative (FN) and false positive (FP). False negative occurs when an early NAK is sent while the decoder decodes correctly the codeword. It causes a waste of resources due to the unnecessary retransmissions but it does not affect the reliability directly. False positive occurs when an early prediction ACK is sent but, in fact, the decoder fails to decode data. This means that there is no retransmission and the packet is lost. It affects the performance of URLLC transmission. Therefore, false positive is more severe than false negative. The probabilities of false negative and false positive can be adapted by changing the proper threshold in predicting ACK or NAK. The ratio between false positive and false negative is changed depending on the requirements at system level and the channel conditions.  If there is an abundance of resource as well as energy and reliability is prioritized, the system is able to accept the unnecessary retransmissions due to false negative so the threshold is adapted to make false negative happen more but false positive happen less and vice versa when the threshold is adapted to make false negative happen less but false positive happen more if resource needs to be shared among many UEs with strict latency and reliability requirements.
 
 \subsection{Transmission scheme to alleviate the effect of false prediction}\label{CC}
 
@@ -269,7 +252,7 @@ In order to avoid the harmful effects of false prediction and take advantage of 
 If there are some services where dynamic control is necessary for feedback purpose or in case of sporadic traffic instants when latency budget may be very critical in some occasions, it will be advantageous to have the dynamic control over the nature of the feedback. For such cases, having an indication in the DCI for the user regarding activation of two-stage feedback will be very helpful. In one method, this indication can be a single bit flag which indicates the activation/de-activation of the two-stage feedback. The resources where UE may potentially transmit early prediction-based feedback upon activation might have been pre-assigned to the UE in the higher layer signaling.
 
 \begin{figure}[htbp]
-\centerline{\includegraphics[scale=0.45]{fig4.png}}
+\centerline{\includegraphics[scale=0.38]{fig4.png}}
 \caption{Downlink transmission with early feedback and the gNB sensing latency budget.}
 \label{fig4}
 \end{figure}
@@ -279,7 +262,7 @@ The scheme showing the operation of downlink transmission with two-stage feedbac
 This scheme not only raises reliability of the system but also decreases the influences of false negative and especially, false positive most of the time. When latency budget still remains sufficiently, early feedback is not considered by the gNB to decide a retransmission so false prediction has no effect to the system. When latency budget is not enough for regular HARQ feedback, early feedback is used. However, in this case, false positive does not cause the detrimental effect as if early feedback is used at the beginning because the error still happens no matter early feedback is used or not because of the shortage of time to do the retransmission. Resource consumption due to false negative might happen only one time at the end of the transmission and is acceptable under the specific limit when latency and reliability are prioritized in URLLC.
 
 \begin{figure}[htbp]
-\centerline{\includegraphics[scale=0.45]{fig5.png}}
+\centerline{\includegraphics[scale=0.38]{fig5.png}}
 \caption{The gNB stops a retransmission triggered by early NAK after receiving ACK HARQ feedback.}
 \label{fig5}
 \end{figure}
@@ -290,7 +273,7 @@ An alternative scheme is also considered when it causes the waste of resources b
 
 Early decoding of PDSCH and the techniques to predict the outcome of PDSCH decoding are under research and will be discussed further in the next release of 3GPP. The proposed scheme of two-stage feedback based on the prediction of PDSCH decoding follows this direction and can be accepted and standardized to improve the performance of 5G NR.
 
-The ability of the UE must be enhanced to implement two-stage feedback when it needs a predictor for the first stage and a decoder for the second stage of regular HARQ feedback. The complexity of the UEs does not rise much when a predictor is required to be implemented because it uses the same algorithm as the decoder. The computation workload of the predictor is also not much when the predictor only deals with a portion of the transmitted data on PDSCH. The design of the UE devices with both a predictor and a decoder should be specified to the manufacturers.  
+The ability of the UE must be enhanced to implement two-stage feedback when it needs a predictor for the first stage and a decoder for the second stage of regular HARQ feedback. The complexity of the UEs does not rise much when a predictor is required to be implemented because it uses the same algorithm as the decoder. The computation workload of the predictor is also not much when the predictor only deals with a portion of PDSCH. The design of the UE devices with both a predictor and a decoder should be specified to the manufacturers.  
 
 \section{Simulation results} \label{VV}
 The simulation is performed in link level to measure the reliability of prediction. LDPC code is used to encode the input PDSCH codeword with 1280 bits by base graph 2 following 3GPP standard \cite{b8}. The output codeword is modulated in QPSK and transmitted in channel. The decoder calculates LLRs and uses them to decode the receiving signal. The decoder uses min-sum message passing algorithm with maximum 25 iterations. The predictor also uses the same algorithm as the decoder but with fewer iterations that is 5.
@@ -303,13 +286,13 @@ The simulation is performed in link level to measure the reliability of predicti
 \begin{table}[htbp]
 \caption{Predicting error at code rate $\frac{1}{4}$}
 \begin{center}
-\begin{tabular}{ |p{0.5em}|c|p{2em}|c|c|p{2.5em}|p{2.5em}|p{3em}|}
+\begin{tabular}{ |p{0.5em}|p{2.5em}|p{2em}|c|c|p{2.5em}|p{2.5em}|p{3em}|}
  \hline
  \multicolumn{8}{|c|}{} \\[-1em]
  \multicolumn{8}{|c|}{\textbf{Code rate $\frac{1}{4}$}} \\
  \multicolumn{8}{|c|}{} \\[-1em]
  \hline
-\textbf{\textit{$r_{p}$}} & \textbf{\textit{SNR}} &\textbf{\textit{Actual BLER}} &\textbf{\textit{FN}} &\textbf{\textit{FP}} &\textbf{\textit{Total errors}}&\textbf{\textit{Latency saved}}&\textbf{\textit{Resource wasted}} \\
+\textbf{\textit{$r_{p}$}} & \textbf{\textit{SNR (dB)}} &\textbf{\textit{Actual BLER}} &\textbf{\textit{FN}} &\textbf{\textit{FP}} &\textbf{\textit{Total errors}}&\textbf{\textit{T\textsubscript{saved}}}&\textbf{\textit{W\textsubscript{res}}} \\
  \hline
  \multirow{4}{1em}{\centering $\frac{1}{3}$} & $-1.4$ &$0.027$ &$0.115$ &$0.020$ &$0.135$&$0.026$&$0.112$  \\\cline{2-8}
  & $-1.35$ &$0.023$ &$0.108$ &$0.010$ &$0.118$&$0.023$&$0.106$  \\\cline{2-8}
@@ -334,13 +317,13 @@ The simulation is performed in link level to measure the reliability of predicti
 \begin{table}[htbp]
 \caption{Predicting error at code rate $\frac{1}{5}$}
 \begin{center}
-\begin{tabular}{ |p{0.5em}|c|p{2em}|c|c|p{2.5em}|p{2.5em}|p{3em}|}
+\begin{tabular}{ |p{0.5em}|p{2.5em}|p{2em}|c|c|p{2.5em}|p{2.5em}|p{3em}|}
  \hline
  \multicolumn{8}{|c|}{} \\[-1em]
  \multicolumn{8}{|c|}{\textbf{Code rate $\frac{1}{5}$}} \\
  \multicolumn{8}{|c|}{} \\[-1em]
  \hline
-\textbf{\textit{$r_{p}$}} & \textbf{\textit{SNR}} &\textbf{\textit{Actual BLER}} &\textbf{\textit{FN}} &\textbf{\textit{FP}} &\textbf{\textit{Total errors}} &\textbf{\textit{Latency saved}}&\textbf{\textit{Resource wasted}} \\
+\textbf{\textit{$r_{p}$}} & \textbf{\textit{SNR (dB)}} &\textbf{\textit{Actual BLER}} &\textbf{\textit{FN}} &\textbf{\textit{FP}} &\textbf{\textit{Total errors}} &\textbf{\textit{T\textsubscript{saved}}}&\textbf{\textit{W\textsubscript{res}}} \\
  \hline
   \multirow{4}{1em}{\centering $\frac{1}{3}$} & $-2.45$ & $0.021$&$0.090 $ &$0.016 $ &$0.106$ &$0.020$ &$0.088$\\\cline{2-8}
   & $-2.4$ &$0.013$ &$0.050$ &$0.013$ &$0.063$&$0.013$ & $0.049$\\\cline{2-8}
@@ -361,31 +344,35 @@ The simulation is performed in link level to measure the reliability of predicti
 \end{center}
 \end{table}
 
-Table~\ref{tab1} and Table~\ref{tab2} shows the predicting error rate of the codeword with code rate $\frac{1}{4}$ and $\frac{1}{5}$. Two cases are considered. In the first case, a half of the transmitted codeword is used to estimate the outcome. In the other case, a third of the transmitted codeword is used for prediction. The performance of the predictor in these two cases does not have a big difference so the predictor of the UE is able to use only a third of PDSCH codeword for the predicting process without influencing reliability while reducing time to generate an early feedback.
+Table~\ref{tab1} and Table~\ref{tab2} show the actual BLER of PDSCH, the rates of false negative, false positive and the total predicting errors (including both false negative and false positive) in a different SNR values with code rate $\frac{1}{4}$ and $\frac{1}{5}$. 
+
+The last two columns show the rate that latency is saved (T\textsubscript{saved}) and the rate that resource is wasted (W\textsubscript{res}). These two variables are defined as follows. Let's take the first case in Table~\ref{tab1} wih $r_{p}$ = $\frac{1}{3}$ and SNR = -1.4dB. Conditioned on the fact that the first transmission is a NAK, the predictor is right in 98\% of the cases and we save latency on the retransmission. A NAK happens 2.7\% of the time so we save in 2.6\% of all times (T\textsubscript{saved} = 0.026). Similarly, a ACK happens 97.3\% of the time and in that case the predictor is wrong in 11.5\% of all cases, leading to 11.2\% of all cases where we waste resources (W\textsubscript{res} = 0.112).
+
+In each table, two cases are considered. In the first case, a half of the transmitted codeword is used to estimate the outcome. In the other case, a third of the transmitted codeword is used for prediction. The performance of the predictor in these two cases does not have a big difference so the predictor of the UE is able to use only a third of PDSCH codeword for the predicting process without influencing reliability while reducing time to generate an early feedback.
 
 The predictor works much better with a lower rate. The reason is that at a lower rate, the codeword is longer so the portion of the codeword that is used to estimate the error probability is also longer. The predictor has more information and the sub-codeword in the predictor has a higher probability to converge.
 
 The error rate of false positive is much smaller (around 10 times smaller) than the overall prediction error. This means that false negative occurs more than false positive. However, as analyzed in \ref{BB}, false negative is less severe than false positive. Moreover, two proposed schemes in \ref{CC} also reduce the effect of false negative if they are implemented in downlink transmission when the gNB decides to use NAK prediction by sensing latency budget or stops the retransmission after receiving ACK. False positive has harmful effects but the occurring probability is very small. Besides, it also has no influence to the performance of the system in the two proposed strategies. 
 
-The last two columns show the ratio of cases that latency is saved when the UE predicts correctly a failure of PDSCH decoding as well as resource is wasted when a false negative error happens. These two factors have trade-off so based on channel conditions and the requirements at system level, the threshold in \eqref{eq9} can be adapted to achieve the target of latency and resource consumption. Besides, the scheme also proposes to stop transmission in case of false negative error in order to reduce further a waste of resources.
+The two variables T\textsubscript{saved} and W\textsubscript{res} have trade-off so based on channel conditions and the requirements at system level, the threshold of the predicting algorithm in \ref{BB} can be adapted to achieve the target of latency and resource consumption. Besides, the scheme also proposes to stop transmission in case of false negative error in order to reduce further a waste of resources.
 
 \section{Conclusion}
 
 The advent of URLLC in 5G requires an improvement in downlink transmission scheme. The state-of-the-art schemes achieve reliability at cost of latency and resource. In this paper, a downlink transmission scheme applying two-stage feedback containing an early prediction-based feedback and a HARQ feedback is presented to reduce latency of retransmission due to HARQ RTT and increase reliability of the transmission. The trade-off between latency, reliability and resource consumption is adapted depending on system requirements and channel conditions.
 
 \begin{thebibliography}{00}
-\bibitem{ad1} Hyoungju Ji,``Introduction to Ultra Reliable and Low Latency Communications in 5G'', arXiv:1704.05565v3.
-\bibitem{b2} G. Berardinelli, ``Enabling early HARQ feedback in 5G networks,'' 2016 IEEE 83rd Vehicular Technology Conference (VTC Spring), pp. 1–5, May 2016.
-\bibitem{ad5} Trung-Kien Le, ``Control and data channel combining for reliability enhancement in Ultra-reliable and low-latency communication's downlink transmission,'' 2019 IEEE 53rd International Conference on Communications, May 2019.
-\bibitem{b1} R1-1719406,``PDCCH reliability for URLLC'', Huawei, HiSilicon, RAN1\#91, Reno, USA, Nov 27--Dec1, 2017.
-\bibitem{b5} R1-1715529,``Ultra-reliable part of URLLC for scheduling and HARQ procedure'', ZTE, Sanechips, RAN1 Ad Hoc\#3, Nagoya, Japan, Sept 18--21, 2017.
-\bibitem{b4} R1-1716248,``Reliable PDCCH operation for NR'', Sony, RAN1 Ad Hoc\#3, Nagoya, Japan, Sept 18--21, 2017.
-\bibitem{b7} R1-1701595,``Analysis of URLLC reliability for HARQ'', ZTE, ZTE Microelectronics, RAN1\#88, Athens, Greece, Feb 13--17, 2017.
+\bibitem{ad1} H. Ji, S. Park, J. Yeo, Y. Kim, J. Lee, and B. Shim, “Ultra Reliable and Low Latency Communications in 5G Downlink: Physical Layer Aspects,”  IEEE Wireless Commun, June 2018.
+\bibitem{b2} G. Berardinelli, S. Khosravirad, K. I. Pedersen, F. Frederiksen and P.Mogensen, “Enabling early HARQ feedback in 5G networks”, IEEE Vehicular Technology Conference, May 2016.
+\bibitem{ad5} T-K.Le, F.Kaltenberger, U.Salim, ``Control and data channel combining for reliability enhancement in Ultra-reliable and low-latency communication's downlink transmission,'' submitted to 2019 IEEE 53rd International Conference on Communications, May 2019.
+\bibitem{b1} Huawei, HiSilicon, ``PDCCH reliability for URLLC'', 3GPP R1-1719406, RAN1\#91, Reno, USA, Nov 27--Dec1, 2017.
+\bibitem{b5} ZTE, Sanechips, ``Ultra-reliable part of URLLC for scheduling and HARQ procedure'', 3GPP R1-1715529, RAN1 Ad Hoc\#3, Nagoya, Japan, Sept 18--21, 2017.
+\bibitem{b4} Sony, ``Reliable PDCCH operation for NR'', 3GPP R1-1716248, RAN1 Ad Hoc\#3, Nagoya, Japan, Sept 18--21, 2017.
+\bibitem{b7} ZTE, ZTE Microelectronics, ``Analysis of URLLC reliability for HARQ'', 3GPP R1-1701595, RAN1\#88, Athens, Greece, Feb 13--17, 2017.
 \bibitem{ad3} 3GPP TR 38.802 v14.1.0, ``Study on new radio access technology physical layer aspects.''
 \bibitem{b6} 3GPP TR 38.913 v14.3.0, ``Study on scenarios and requirements for next generation access technologies.''
 \bibitem{ad2} 3GPP TR 38.211 v15.0.0, ``Physical channels and modulation.''
 \bibitem{b8} 3GPP TR 38.212 v15.0.0, ``Multiplexing and channel coding.''
-\bibitem{ad4} Chairman's Notes RAN1 \#90.
+\bibitem{ad4} Chairman's Notes RAN1 \#90, Prague, Czech Republic, Aug 21--25, 2017.
 
 \end{thebibliography}
 \vspace{12pt}
