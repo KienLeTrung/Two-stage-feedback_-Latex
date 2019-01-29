@@ -22,7 +22,7 @@
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 \begin{document}
 
-\title{Ultra-reliable and low-latency communication's downlink transmission with two-stage feedback\\
+\title{Ultra-reliable low-latency communication's downlink transmission with two-stage feedback\\
 %{\footnotesize \textsuperscript{*}Note: Sub-titles are not captured in Xplore and
 %should not be used}
 %\thanks{Identify applicable funding agency here. If none, delete this.}
@@ -83,12 +83,12 @@ Among these three service categories, URLLC raises the most challenge because it
 \subsection{Techniques accepted in 3GPP Release 15}\label{IAA}
 In Release 15, new frame structure and physical layer design to support URLLC have been agreed.
 
-The number of allowed values for subcarrier spacing (SCS) are extended to reduce symbol period. In LTE, SCS is fixed at 15kHz while in 5G, SCS can be selected flexibly among 30kHz, 60 kHz, 120kHz or even 240kHz \cite{ad2}. As a result, time-to-transmit latency decreases significantly.
+The number of allowed values for subcarrier spacing (SCS) are extended to reduce symbol period. In LTE, SCS is fixed at 15kHz while in 5G, SCS can be selected flexibly among 15kHz, 30kHz, 60 kHz, 120kHz or even 240kHz \cite{ad2}. The value of slot duration decreases down to 62.5 $\mu$s equivalent to the highest SCS.  As a result, time-to-transmit latency decreases significantly.
 
 Time-to-transmit latency can drop further by carrying out mini-slot level transmission instead of slot level transmission when it leads to a drop of waiting time for a new packet \cite{ad3}.
 
 \subsection{Techniques under research for next 3GPP releases}\label{IBB}
-New techniques in transmission scheme to attain the latency and reliability requirements have attracted the attention of many companies. The proposals focus on repetition-based transmission aiming to relax the complexity of control and data channel design. Latency between the reception of data and the generating of retransmission is minimized in order to maximize the number of retransmission opportunities in the time budget while a waste of resources due to unnecessary retranmission is reduced.
+New techniques in transmission scheme to attain the latency and reliability requirements have attracted the attention of many companies. The proposals focus on repetition-based transmission aiming to relax the complexity of control and data channel design. 
 
 A physical control channel (PDCCH) repetition in time domain is considered in \cite{b1}. PDCCH can be repeated without waiting for hybrid automatic repeat request (HARQ) feedback and physical data shared channel (PDSCH) is delayed until the success of PDCCH transmission. The process will stop when PDCCH is decoded successfully in the UE and the gNB receives ACK of PDCCH. After obtaining downlink control information (DCI) from PDCCH, the UE can start to decode PDSCH. Similarly, in \cite{b5}, the gNB continuously transmits PDCCH and PDSCH in the latency budget. When HARQ-ACK feedback is received, the repetition is terminated. These methods lead to a big waste of time and frequency resources if ACK feedback does not come to the gNB fast enough to stop the unnecessary retransmissions. 
 
@@ -103,7 +103,7 @@ The requirement for URLLC is specified in \cite{b6}: ``A general URLLC reliabili
 
 It is also noted in that document that spectral efficiency and energy consumption also should be considered when trying to achieve a reliability target. 
 \subsection{Analysis of URLLC latency}
-Latency in physical layer can be expressed by the sum of 4 terms \cite{ad1}:
+Latency in physical layer can be expressed by the sum of 4 terms \cite{ad1}
 \begin{equation}
 T\textsubscript{L}= T\textsubscript{ttt} + T\textsubscript{procTx} + T\textsubscript{prop} + T\textsubscript{procRx} + T\textsubscript{reTx},\label{eq1}
 \end{equation}
@@ -117,7 +117,7 @@ T\textsubscript{L}= T\textsubscript{ttt} + T\textsubscript{procTx} + T\textsubsc
 
 In LTE, T\textsubscript{ttt} is fixed to 1ms while T\textsubscript{proc} and T\textsubscript{reTx} also contribute significantly to latency so URLLC latency requirement cannot be fulfilled. New frame structure and transmission scheme must be applied to URLLC to reduce latency as mentionned in in \ref{IAA} and \ref{IBB}.  
 \subsection{Analysis of URLLC reliability}\label{IIBB}
-In one-shot transmission, the error probability of a transmission is :
+In one-shot transmission, the error probability of a transmission is
 \begin{equation}
 P^{e} = 1 - (1 - P^{e}_{c})(1 - P^{e}_{d}),\label{eq2}
 \end{equation}
@@ -129,7 +129,7 @@ P^{e} = 1 - (1 - P^{e}_{c})(1 - P^{e}_{d}),\label{eq2}
 
 According to the URLLC requirement, the error probability is smaller than 10\textsuperscript{-5}. From \eqref{eq2}, in order to achieve that probability, it requires that the error probabilities of PDCCH and PDSCH are below 10\textsuperscript{-6}. The design of control and data channel to achieve this value is sophisticated and consumes remarkable time and frequency resources.
 
-The complexity of channel design can be relaxed by considering a scheme with one retransmission in \cite{b7}. The successful probability of a transmission is:
+The complexity of channel design can be relaxed by considering a scheme with one retransmission in \cite{b7}. The successful probability of a transmission is
 \begin{equation}
 P = P_{c}P_{d1} + (1-P_{c})P_{DTX}P_{c}P_{d1} + P_{c}(1-P_{d1})P_{N}P_{c}P_{d2},\label{eq3}
 \end{equation}
@@ -158,10 +158,10 @@ In HARQ process, HARQ latency consists of:
 
 In these terms, $T_{FB}$ can be reduced to lower HARQ latency. The other terms are fixed or hard to reduce due to the inherent characteristics. $\tau$ depends on the distance and environment between the gNB and the UE that cannot be changed. Similarly, $T_{A/N}$ and $T_{TTI}$ are also fixed. $T_{Tx}$ is hard to improve when feedback normally contains only 1 bit so the decoder at the gNB is already able to decode HARQ feedback quickly. 
 
-As can be seen in Fig.~\ref{fig1}, $T_{FB}$ has a heavy contribution to latency from the transmission time during which the transmitter is transmitting the packet to the processing time at the receiver during which the receiver is doing the receive processing. The receive processing includes but not limited to equalization, demodulation and channel decoding where channel decoding at the decoder is quite an onerous task. It impedes the opportunity of the useful retransmissions in the time constraint.
+As can be seen in Fig.~\ref{fig1}, $T_{FB}$ has a heavy contribution to latency from the transmission time during which the transmitter is transmitting the packet to the processing time at the receiver during which the receiver is doing the receive processing. The receive processing includes but not limited to equalization, demodulation and channel decoding where channel decoding at the decoder is quite an onerous task. It impedes the opportunity of the useful retransmissions in the time constraint. This analysis with slot represented in Fig.~\ref{fig1} is valid for all numerologies of slot duration and SCS.
 
 \begin{figure}[htbp]
-\centerline{\includegraphics[scale=0.38]{fig1.png}}
+\centerline{\includegraphics[scale=0.35]{fig1.png}}
 \caption{Impact of $T_{FB}$ to HARQ RTT.}
 \label{fig1}
 \end{figure}
@@ -176,13 +176,13 @@ In an effort to optimize the HARQ feedback timing and creating more (re-)transmi
 
 To reduce the impact of the TTI duration in the HARQ RTT, the strategy is proposed that the receiver evaluates the error probability of PDSCH based on LLR estimation by using only a fraction of the transmitted transport block instead of using the message passing algorithm for the whole codeword as in the decoder as illustrated in Fig.~\ref{fig2}. This means that the receiver does not need to wait until the end of TTI for the complete reception of the transport block to start process (decode) the codeword, rather it can start the prediction computation just after receiving a fraction of the transport block, way before the complete reception of the transport block.
 
-In HARQ process, time from the arrival of data in the UE to the generation of feedback is calculated by:
+In HARQ process, time from the arrival of data in the UE to the generation of feedback is calculated by
 
 \begin{equation}
 T = T_{TTI} + T_{FB}\label{eq4},
 \end{equation}
 
-On the other hand, in early feedback process, time from the beginning of data transmission in the gNB to the generation of feedback in the UE is calculated by:
+On the other hand, in early feedback process, time from the beginning of data transmission in the gNB to the generation of feedback in the UE is calculated by
 
 \begin{equation}
 T' = r_{p}\times T_{TTI} + T_{predictor}\label{eq5},
@@ -196,7 +196,7 @@ T' = r_{p}\times T_{TTI} + T_{predictor}\label{eq5},
 
 The latency benefit in retransmission represented in the number of OFDM symbols saved by early prediction-based feedback are calculated in the following analysis. PDSCH length is 4 OFDM symbols with SCS 60kHz in Fig.~\ref{fig2}. The maximum processing time of the decoder is 0.125ms that is equivalent to 7 OFDM symbols with SCS 60kHz (1 slot with SCS 60kHz has 14 OFDM symbols spread in 0.25ms). The predictor only uses half of the transmitted bits in order to estimate the error probability of the decoder so it only uses 2 symbols and time equivalent to 2 symbols is saved. Moreover, the predictor only deals with a small portion of bits and runs few iterations of message passing algorithm in comparison to a whole codeword and full iterations of the decoder. Thereby, the predictor takes less time to provide an estimation. If the iterations of the predictor are one fifth that of the decoder (applied in simulation presented in \ref{VV}), the processing time of the predictor is 0.025ms being approximate to 2 symbols. This means that 5 symbols are saved. In total, time corresponding to 7 symbols is saved in the retransmission process and this time margin gained  might be translated  to  one more  retransmission  possibility  in the time constraint. In addition, if the UE continues to fail to decode data several times, the accumulated saving time after each NAK feedback even leads to many retransmission opportunities.  Thereby,  the reliability  requirement  of  channel  design  can  be  relaxed to  reduce  resource  utilization. 
 \begin{figure}[htbp]
-\centerline{\includegraphics[scale=0.38]{fig3.png}}
+\centerline{\includegraphics[scale=0.33]{fig3.png}}
 \caption{Missing early feedback triggers an early transmission.}
 \label{fig3}
 \end{figure}
@@ -250,7 +250,7 @@ The scheme showing the operation of downlink transmission with two-stage feedbac
 This scheme not only raises reliability of the system but also decreases the influences of false negative and especially, false positive most of the time. When latency budget still remains sufficiently, early feedback is not considered by the gNB to decide a retransmission so false prediction has no effect to the system. When latency budget is not enough for regular HARQ feedback, early feedback is used. However, in this case, false positive does not cause the detrimental effect as if early feedback is used at the beginning because the error still happens no matter early feedback is used or not because of the shortage of time to do the retransmission. Resource consumption due to false negative might happen only one time at the end of the transmission and is acceptable under the specific limit when latency and reliability are prioritized in URLLC.
 
 \begin{figure}[htbp]
-\centerline{\includegraphics[scale=0.4]{fig5.png}}
+\centerline{\includegraphics[scale=0.37]{fig5.png}}
 \caption{The gNB stops a retransmission triggered by early NAK after receiving ACK HARQ feedback.}
 \label{fig5}
 \end{figure}
@@ -355,8 +355,8 @@ The proposed scheme is going to be implemented in a system level simulator with 
 URLLC service provisioning in 5G requires an improvement in the current downlink transmission mechanism. The state-of-the-art schemes achieve reliability at the cost of latency and resource. In this paper, a downlink transmission scheme applying two-stage feedback containing an early prediction-based feedback and a HARQ feedback is presented to reduce latency of retransmission due to HARQ RTT and increase reliability of the transmission. The scheme allows flexible operating points to better achieve trade-off among latency, reliability and resource consumption as a function of system requirements and channel conditions.
 
 \begin{thebibliography}{00}
-\bibitem{ad1} H. Ji, S. Park, J. Yeo, Y. Kim, J. Lee, and B. Shim, “Ultra Reliable and Low Latency Communications in 5G Downlink: Physical Layer Aspects,”  IEEE Wireless Commun, June 2018.
-\bibitem{b2} G. Berardinelli, S. Khosravirad, K. I. Pedersen, F. Frederiksen and P.Mogensen, “Enabling early HARQ feedback in 5G networks”, IEEE Vehicular Technology Conference, May 2016.
+\bibitem{ad1} H. Ji, S. Park, J. Yeo, Y. Kim, J. Lee, and B. Shim, ``Ultra Reliable and Low Latency Communications in 5G Downlink: Physical Layer Aspects,''  IEEE Wireless Commun, June 2018.
+\bibitem{b2} G. Berardinelli, S. Khosravirad, K. I. Pedersen, F. Frederiksen and P.Mogensen, ``Enabling early HARQ feedback in 5G networks'', IEEE Vehicular Technology Conference, May 2016.
 \bibitem{ad5} T-K. Le, F. Kaltenberger, U. Salim, ``Control and data channel combining in Ultra-Reliable Low-Latency Communication,'' submitted to 2019 IEEE 53rd International Conference on Communications, May 2019.
 \bibitem{b1} Huawei, HiSilicon, ``PDCCH reliability for URLLC'', 3GPP R1-1719406, RAN1\#91, Reno, USA, Nov 27--Dec1, 2017.
 \bibitem{b5} ZTE, Sanechips, ``Ultra-reliable part of URLLC for scheduling and HARQ procedure'', 3GPP R1-1715529, RAN1 Ad Hoc\#3, Nagoya, Japan, Sept 18--21, 2017.
